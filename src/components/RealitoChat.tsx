@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
 
-const ease = [0.2, 0, 0, 1];
+const ease = [0.2, 0, 0, 1] as const;
 
 const RealitoChat = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,7 @@ import {
   Users, Settings, TrendingUp, Mountain, ArrowLeft
 } from "lucide-react";
 
-const ease = [0.2, 0, 0, 1];
+const ease = [0.2, 0, 0, 1] as const;
 
 const stats = [
   { label: "Lugares", value: "847", icon: MapPin, change: "+12" },

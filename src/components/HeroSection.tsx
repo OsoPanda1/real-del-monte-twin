@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Map, Mountain, Compass, Radio } from "lucide-react";
 import heroImage from "@/assets/hero-rdm.jpg";
 
-const ease = [0.2, 0, 0, 1];
+const ease = [0.2, 0, 0, 1] as const;
 
 const HeroSection = () => {
   const navigate = useNavigate();

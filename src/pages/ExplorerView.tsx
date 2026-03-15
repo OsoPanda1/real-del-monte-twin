@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import topoPattern from "@/assets/topo-pattern.jpg";
 
-const ease = [0.2, 0, 0, 1];
+const ease = [0.2, 0, 0, 1] as const;
 
 const mockNodes = [
   { id: 1, name: "Mina de Acosta", type: "heritage", lat: 20.229, lng: -98.674, status: "active" },

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import topoPattern from "@/assets/topo-pattern.jpg";
 import { Layers, Database, Shield, Cpu, Globe, Radio, Zap } from "lucide-react";
 
-const ease = [0.2, 0, 0, 1];
+const ease = [0.2, 0, 0, 1] as const;
 
 const layers = [
   { icon: Globe, name: "Explorer", desc: "Gemelo Digital 2D/3D", color: "text-accent" },
