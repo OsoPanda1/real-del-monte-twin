@@ -70,7 +70,7 @@ const AdminDashboard = () => {
             >
               <div className="flex items-center justify-between mb-3">
                 <stat.icon className="w-4 h-4 text-muted-foreground" />
-                <span className="tabular-data text-[10px] text-green-500">
+                <span className="tabular-data text-[10px] text-primary">
                   {stat.change}
                 </span>
               </div>
