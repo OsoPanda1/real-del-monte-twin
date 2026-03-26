@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Map, Mountain, Compass, Radio } from "lucide-react";
-import heroImage from "@/assets/hero-rdm.jpg";
+import { Map, Mountain, Compass, Radio, Sparkles } from "lucide-react";
+import heroImage from "@/assets/rdm-hero-banner.png";
+import rdmBadge from "@/assets/rdm-logo-badge.png";
 
 const ease = [0.2, 0, 0, 1] as const;
 
@@ -10,33 +11,72 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image with overlay */}
+      {/* Background image with Ken Burns */}
       <motion.div
         className="absolute inset-0 z-0"
-        initial={{ scale: 1.1, opacity: 0 }}
+        initial={{ scale: 1.15, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.2, ease }}
+        transition={{ duration: 2, ease }}
       >
-        <img
+        <motion.img
           src={heroImage}
-          alt="Vista aérea de Real del Monte entre la neblina"
+          alt="Vista aérea de Real del Monte con pueblo mágico iluminado de noche"
           className="w-full h-full object-cover"
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/40 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/70" />
       </motion.div>
 
-      {/* Scan line effect */}
-      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden opacity-[0.03]">
+      {/* Particle field */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-0.5 h-0.5 rounded-full bg-primary/40"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -150 - Math.random() * 200],
+              opacity: [0, 0.6, 0],
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              delay: Math.random() * 4,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Scan line */}
+      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden opacity-[0.02]">
         <div className="w-full h-px bg-primary animate-scan" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center">
+        {/* Badge */}
+        <motion.div
+          className="flex justify-center mb-6"
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease, delay: 0.2 }}
+        >
+          <img
+            src={rdmBadge}
+            alt="RDM Digital Badge"
+            className="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-xl"
+          />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease, delay: 0.3 }}
+          transition={{ duration: 0.8, ease, delay: 0.4 }}
           className="mb-4"
         >
           <span className="tabular-data text-xs uppercase tracking-[0.3em] text-muted-foreground">
@@ -45,10 +85,10 @@ const HeroSection = () => {
         </motion.div>
 
         <motion.h1
-          className="heritage-text text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.9] mb-6"
+          className="heritage-text text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.9] mb-2"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease, delay: 0.5 }}
+          transition={{ duration: 1, ease, delay: 0.6 }}
         >
           <span className="text-gradient-gold">RDM</span>
           <span className="text-foreground">‑X</span>
@@ -58,18 +98,18 @@ const HeroSection = () => {
           className="heritage-text text-xl sm:text-2xl md:text-3xl text-foreground/80 mb-2 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease, delay: 0.7 }}
+          transition={{ duration: 0.8, ease, delay: 0.8 }}
         >
           El pulso digital de la montaña
         </motion.p>
 
         <motion.p
-          className="text-sm text-muted-foreground max-w-xl mx-auto mb-12"
+          className="text-sm text-muted-foreground max-w-xl mx-auto mb-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, ease, delay: 0.9 }}
+          transition={{ duration: 0.8, ease, delay: 1.0 }}
         >
-          Gemelo digital soberano de Real del Monte. 7 capas federadas. 
+          Gemelo digital soberano de Real del Monte. 7 capas federadas.
           Un solo organismo digital coherente.
         </motion.p>
 
@@ -78,7 +118,7 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease, delay: 1.1 }}
+          transition={{ duration: 0.8, ease, delay: 1.2 }}
         >
           <button
             onClick={() => navigate("/explorer")}
@@ -115,9 +155,9 @@ const HeroSection = () => {
       {/* Chronus Ticker */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.6 }}
       >
         <ChronusTicker />
       </motion.div>
@@ -132,18 +172,18 @@ const ChronusTicker = () => {
         <div className="w-2 h-2 rounded-full bg-primary animate-pulse-gold" />
         <span className="tabular-data text-xs text-muted-foreground">CHRONUS ENGINE</span>
       </div>
-      
+
       <div className="flex items-center gap-6 sm:gap-10">
         <div className="text-center">
-          <span className="tabular-data text-xs text-muted-foreground block">Cobertura Soberana</span>
+          <span className="tabular-data text-xs text-muted-foreground block">Cobertura</span>
           <span className="tabular-data text-sm text-primary font-semibold">94.2%</span>
         </div>
         <div className="text-center">
-          <span className="tabular-data text-xs text-muted-foreground block">Nodos Activos</span>
+          <span className="tabular-data text-xs text-muted-foreground block">Nodos</span>
           <span className="tabular-data text-sm text-accent font-semibold">1,248</span>
         </div>
         <div className="text-center">
-          <span className="tabular-data text-xs text-muted-foreground block">Latencia Edge</span>
+          <span className="tabular-data text-xs text-muted-foreground block">Latencia</span>
           <span className="tabular-data text-sm text-foreground font-semibold">12ms</span>
         </div>
         <div className="text-center hidden sm:block">
@@ -153,8 +193,8 @@ const ChronusTicker = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Mountain className="w-3 h-3 text-muted-foreground" />
-        <span className="tabular-data text-xs text-muted-foreground">2,660 msnm</span>
+        <Sparkles className="w-3 h-3 text-primary" />
+        <span className="tabular-data text-xs text-muted-foreground">Isabella Core™</span>
       </div>
     </div>
   );

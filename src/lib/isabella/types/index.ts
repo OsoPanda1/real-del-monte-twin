@@ -1,11 +1,9 @@
 /**
- * @tamv/isabella-core — Realito AI Isabella Core™
- * Type system for the federated cognitive engine.
+ * Isabella Core™ — Type definitions for the cognitive pipeline
+ * TAMVAI API NextGen types
  */
 
 export type Emotion = "amor" | "tristeza" | "miedo" | "odio" | "asombro" | "neutral";
-
-export type FlowSpeed = "lento" | "medio" | "rapido";
 
 export type MiniAIName =
   | "MiniAI_Explorer"
@@ -18,7 +16,8 @@ export type MiniAIName =
 export interface RawMessagePayload {
   userId: string;
   text: string;
-  channel: "web" | "mobile" | "xr" | "api";
+  channel?: "web" | "mobile" | "xr";
+  audioBuffer?: ArrayBuffer;
   metadata?: Record<string, unknown>;
 }
 
@@ -26,33 +25,28 @@ export interface CleanResult {
   cleanedText: string;
   noiseScore: number;
   piiMasked: boolean;
-  tokensEstimated: number;
 }
 
 export interface IntentResult {
   intent: string;
   confidence: number;
-  subIntents?: string[];
 }
 
 export interface EmotionResult {
   dominant: Emotion;
   scores: Record<Emotion, number>;
-  arousal: number; // 0-1
-  valence: number; // -1 to 1
 }
 
 export interface RoutePlan {
   miniAIs: MiniAIName[];
-  flowSpeed: FlowSpeed;
-  priority: number;
+  flowSpeed: "lento" | "medio" | "rapido";
 }
 
 export interface MiniAIResponse {
   miniAI: MiniAIName;
   payload: unknown;
-  latencyMs: number;
   confidence: number;
+  latencyMs: number;
 }
 
 export interface IsabellaInput {
@@ -81,27 +75,12 @@ export interface AgentTraceEntry {
   timestamp: string;
 }
 
-export interface BookPIRecord {
-  id: string;
-  userId: string;
-  sessionId: string;
-  timestamp: string;
-  rawHash: string;
-  cleanText: string;
-  intent: string;
-  emotion: Emotion;
-  routePlan: RoutePlan;
-  agentTrace: AgentTraceEntry[];
-  decisionSummary: string;
-}
-
 export interface ConversationMessage {
   id: string;
-  role: "user" | "assistant" | "system" | "agent-trace";
+  role: "user" | "assistant";
   text: string;
   timestamp: string;
   emotion?: Emotion;
-  miniAI?: MiniAIName;
   agentTrace?: AgentTraceEntry[];
 }
 
@@ -112,4 +91,16 @@ export interface IsabellaSessionState {
   activeAgents: MiniAIName[];
   bookpiCount: number;
   isProcessing: boolean;
+}
+
+export interface BookPIRecord {
+  id: string;
+  userId: string;
+  timestamp: string;
+  rawHash: string;
+  cleanText: string;
+  intent: string;
+  emotion: Emotion;
+  routePlan: RoutePlan;
+  decisionSummary?: string;
 }
