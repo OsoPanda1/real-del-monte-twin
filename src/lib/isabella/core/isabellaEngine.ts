@@ -14,38 +14,52 @@ import { FilterService } from "./filterService";
 
 const REALITO_RESPONSES: Record<string, string[]> = {
   saludo: [
-    "¡Hola! Soy Realito, tu guía digital de Real del Monte. 🏔️ ¿Qué te gustaría descubrir hoy?",
+    "¡Hola! Soy **Realito**, tu guía digital de Real del Monte. 🏔️ ¿Qué te gustaría descubrir hoy?",
     "¡Bienvenido al gemelo digital de Real del Monte! ¿Te cuento sobre nuestras minas, pastes o rutas?",
-    "¡Qué gusto saludarte! Real del Monte tiene mucho que ofrecer. ¿Por dónde empezamos?",
+    "¡Qué gusto saludarte! Real del Monte tiene mucho que ofrecer. ¿Por dónde empezamos? 🥟",
   ],
   despedida: [
     "¡Hasta pronto! Real del Monte siempre te espera. 🌄",
     "¡Nos vemos! No olvides probar los pastes cuando vengas. 🥟",
+    "¡Fue un placer! Recuerda que puedes explorar el gemelo digital cuando quieras. 🏔️",
   ],
   consulta_mapa: [
-    "¡Excelente pregunta! Puedes explorar el mapa interactivo con todos los puntos de interés, rutas históricas y negocios activos. Te recomiendo visitar la Mina de Acosta y el Panteón Inglés.",
-    "El gemelo digital de RDM tiene capas de terreno 3D, comercios, rutas y patrimonio. ¿Quieres que te guíe a algún lugar específico?",
+    "¡Excelente! Puedes explorar el **mapa interactivo** con todos los puntos de interés, rutas históricas y negocios activos. Te recomiendo visitar la **Mina de Acosta** y el **Panteón Inglés**. 🗺️",
+    "El gemelo digital de RDM-X tiene capas de terreno 3D, comercios, rutas y patrimonio. ¿Quieres que te guíe a algún lugar específico?",
+    "Desde el Explorer puedes ver terreno real con edificios extruidos, nodos de comercios y rutas. ¡Abre la vista 3D para una experiencia inmersiva! 🌐",
   ],
   consulta_comercio: [
-    "Real del Monte es famoso por sus pastes — herencia de los mineros cornish del siglo XIX. Te recomiendo Pastes El Portal y los puestos de la plaza principal. 🥟",
-    "Hay varios comercios locales activos en el gemelo digital. Desde pastelerías tradicionales hasta tiendas de artesanías. ¿Buscas algo específico?",
+    "Real del Monte es famoso por sus **pastes** — herencia de los mineros cornish del siglo XIX. Te recomiendo **Pastes El Portal** y los puestos de la plaza principal. 🥟",
+    "Hay varios comercios activos: **Platería del Monte** (joyería en plata), **Artesanías Don Lorenzo** (micheladas y artesanías), y múltiples pasterías. ¿Buscas algo específico?",
+    "Los comercios locales son el corazón del pueblo. Desde platerías artesanales hasta las legendarias pasterías. Todo está mapeado en el gemelo digital. 🛍️",
   ],
   consulta_patrimonio: [
-    "El patrimonio de Real del Monte es extraordinario: la Mina de Acosta (siglo XVI), el Panteón Inglés con tumbas de mineros cornish, el Museo de Medicina Laboral y la Iglesia de la Asunción. ¿Cuál te interesa?",
-    "Como Pueblo Mágico, Real del Monte conserva su herencia minera británica única en México. Las calles empedradas, las fachadas coloniales y las minas son testigos de más de 400 años de historia.",
+    "El patrimonio de Real del Monte es extraordinario: la **Mina de Acosta** (siglo XVI), el **Panteón Inglés** con tumbas de mineros cornish, el **Museo de Medicina Laboral** y la **Iglesia de la Asunción**. ¿Cuál te interesa? 🏛️",
+    "Como Pueblo Mágico, Real del Monte conserva su herencia minera británica única en México. Las calles empedradas, las fachadas coloniales y las minas son testigos de más de **400 años de historia**.",
+    "La historia minera de Real del Monte conecta a México con Cornwall, Inglaterra. Los mineros trajeron los pastes, el fútbol y una arquitectura única. Todo esto vive en nuestro gemelo digital. ⛏️",
   ],
   consulta_eventos: [
-    "Real del Monte celebra la Feria del Paste cada octubre, el Festival Cultural Minero y diversas fiestas patronales. ¿Te gustaría ver los eventos activos en el gemelo digital?",
+    "Real del Monte celebra la **Feria del Paste** cada octubre 🎉, el **Festival Cultural Minero** y diversas fiestas patronales. ¿Te gustaría ver los eventos activos en el gemelo digital?",
+    "Hay eventos durante todo el año: festivales gastronómicos, recorridos nocturnos por las minas, y celebraciones patronales. El ChronusEngine los muestra en tiempo real. 📅",
+  ],
+  consulta_rutas: [
+    "Tenemos varias rutas: la **Ruta Minera** (visita las minas históricas), la **Ruta Gastronómica** (pastes, platerías, artesanías), y la **Ruta del Panteón Inglés**. ¿Cuál te interesa? 🥾",
+    "El Explorer tiene 12 rutas trazadas sobre el terreno real. Puedes activar la capa de Rutas para verlas todas con elevación y tiempo estimado. 🗺️",
+  ],
+  consulta_sanitarios: [
+    "Los sanitarios públicos están ubicados en la **zona centro**, cerca de la plaza principal. En el Explorer puedes activar la capa de Servicios para verlos en el mapa. 🚻",
+    "Hay sanitarios públicos disponibles junto a la plaza y cerca de los principales puntos turísticos. ¡Todo mapeado en el gemelo digital!",
   ],
   solicitud_ayuda: [
-    "¡Con gusto te ayudo! Puedo informarte sobre:\n• 🗺️ Rutas y lugares de interés\n• 🏛️ Patrimonio histórico\n• 🥟 Gastronomía y comercios\n• 📊 El gemelo digital RDM-X\n¿Qué necesitas?",
+    "¡Con gusto te ayudo! Puedo informarte sobre:\n• 🗺️ Rutas y lugares de interés\n• 🏛️ Patrimonio histórico (minas, panteón, iglesias)\n• 🥟 Gastronomía y comercios (pastes, platerías)\n• 📊 El gemelo digital RDM-X\n• 🚻 Servicios públicos\n¿Qué necesitas?",
   ],
   admin_acceso: [
-    "El panel de administración RDM-X está disponible en /admin. Desde ahí puedes gestionar lugares, negocios, eventos y el ecosistema digital.",
+    "El **Panel Soberano** RDM-X está disponible en /admin. Desde ahí puedes gestionar lugares, negocios, eventos y monitorear el pipeline de **Isabella Core™**. 🛡️",
   ],
   general: [
-    "Interesante pregunta. Real del Monte es un pueblo con alma de dos continentes — México y Cornwall. ¿Puedo ayudarte con algo más específico?",
-    "Soy Realito, experto en todo lo que hace especial a Real del Monte. Pregúntame sobre historia, gastronomía, rutas o el gemelo digital.",
+    "Interesante pregunta. Real del Monte es un pueblo con alma de dos continentes — México y Cornwall. ¿Puedo ayudarte con algo más específico sobre el pueblo? 🏔️",
+    "Soy **Realito**, experto en todo lo que hace especial a Real del Monte. Pregúntame sobre historia, gastronomía, rutas o el gemelo digital. ¡Estoy conectado a **Isabella Core™**! ✨",
+    "Real del Monte es un Pueblo Mágico a 2,660 metros sobre el nivel del mar, en la Sierra de Pachuca. ¿Qué te gustaría explorar? 🌄",
   ],
 };
 
@@ -64,7 +78,7 @@ export class IsabellaEngine {
       messages: [{
         id: `msg-welcome-${Date.now()}`,
         role: "assistant",
-        text: "¡Hola! Soy **Realito**, tu asistente cognitivo de Real del Monte. Estoy conectado al gemelo digital RDM-X y puedo ayudarte a explorar este Pueblo Mágico. 🏔️\n\n¿Qué te gustaría descubrir?",
+        text: "¡Hola! Soy **Realito**, tu asistente cognitivo de Real del Monte. Estoy conectado al gemelo digital RDM-X con **Isabella Core™** y puedo ayudarte a explorar este Pueblo Mágico. 🏔️\n\n¿Qué te gustaría descubrir?",
         timestamp: new Date().toISOString(),
       }],
       currentEmotion: null,
@@ -131,7 +145,6 @@ export class IsabellaEngine {
       sessionId: session.sessionId,
     };
 
-    // Update session
     const userMsg: ConversationMessage = {
       id: `msg-${Date.now()}-u`,
       role: "user",
@@ -163,14 +176,15 @@ export class IsabellaEngine {
     const pool = REALITO_RESPONSES[intent] || REALITO_RESPONSES.general;
     const base = pool[Math.floor(Math.random() * pool.length)];
 
-    // Enrich with emotional context
     let enrichment = "";
     if (emotion === "tristeza") {
-      enrichment = "\n\n_Noto algo de melancolía en tus palabras. Real del Monte tiene esa magia de reconfortar el alma._";
+      enrichment = "\n\n_Noto algo de melancolía en tus palabras. Real del Monte tiene esa magia de reconfortar el alma con sus calles empedradas y su neblina._";
     } else if (emotion === "asombro") {
-      enrichment = "\n\n_¡Me encanta tu entusiasmo! Real del Monte tiene mucho más por descubrir._";
+      enrichment = "\n\n_¡Me encanta tu entusiasmo! Real del Monte tiene mucho más por descubrir. Cada rincón guarda una historia._";
     } else if (emotion === "amor") {
-      enrichment = "\n\n_Se nota tu cariño por este lugar. Real del Monte deja huella en quien lo visita._";
+      enrichment = "\n\n_Se nota tu cariño por este lugar. Real del Monte deja huella en quien lo visita. ¡Es un pueblo que enamora!_ 💛";
+    } else if (emotion === "miedo") {
+      enrichment = "\n\n_No te preocupes, estás en buenas manos. Real del Monte es un lugar tranquilo y acogedor. ¡Aquí Realito te cuida!_ 🛡️";
     }
 
     return base + enrichment;

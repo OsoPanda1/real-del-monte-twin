@@ -1,26 +1,40 @@
 import { motion } from "framer-motion";
-import { Github, ExternalLink } from "lucide-react";
+import { Github, ExternalLink, Mountain } from "lucide-react";
+import rdmBadge from "@/assets/rdm-logo-badge.png";
 
 const ease = [0.2, 0, 0, 1] as const;
 
 const Footer = () => {
   return (
-    <footer className="relative border-t border-border/30 py-12">
+    <footer className="relative border-t border-border/30 py-16">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="heritage-text text-lg text-gradient-gold mb-3">RDM‑X</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={rdmBadge} alt="RDM" className="w-10 h-10 object-contain" />
+              <h3 className="heritage-text text-lg text-gradient-gold">RDM‑X</h3>
+            </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
               Ecosistema soberano federado para Real del Monte.
-              Gemelo digital vivo de la montaña minera.
+              Gemelo digital vivo de la montaña minera. Pueblo Mágico a 2,660 msnm.
             </p>
           </div>
           <div>
             <h4 className="font-sans font-semibold text-xs text-foreground mb-3 uppercase tracking-wider">Células</h4>
             <div className="space-y-1.5">
-              {["Explorer", "Elevated", "Admin", "Realito AI", "Analytics", "Backend", "Edge"].map((item) => (
+              {["Explorer · Gemelo 3D", "Elevated · Narrativa", "Admin · Panel", "Isabella Core™ · IA", "BookPI · Memoria", "ChronusEngine · RT", "Edge Soberano"].map((item) => (
                 <p key={item} className="text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
                   {item}
+                </p>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h4 className="font-sans font-semibold text-xs text-foreground mb-3 uppercase tracking-wider">Patrimonio</h4>
+            <div className="space-y-1.5">
+              {["Mina de Acosta", "Panteón Inglés", "Pastes Cornish", "Platería del Monte", "Museo de Medicina", "Iglesia de la Asunción"].map((item) => (
+                <p key={item} className="text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors flex items-center gap-1.5">
+                  <Mountain className="w-2.5 h-2.5" /> {item}
                 </p>
               ))}
             </div>
@@ -36,6 +50,9 @@ const Footer = () => {
               </a>
               <p className="text-xs text-muted-foreground">Pachuca, Hidalgo · México</p>
               <p className="text-xs text-muted-foreground">CEO: Edwin O. Castillo Trejo</p>
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                "Innovación Turística Inteligente"
+              </p>
             </div>
           </div>
         </div>
@@ -51,7 +68,7 @@ const Footer = () => {
             © 2026 TAMV ONLINE NETWORK · Soberanía Digital · Real del Monte, Hidalgo
           </span>
           <span className="tabular-data text-[10px] text-muted-foreground">
-            RDM‑X v1.0 · 7 Células · Arquitectura Federada
+            RDM‑X v2.0 · Isabella Core™ · 7 Células · Arquitectura Federada
           </span>
         </motion.div>
       </div>
