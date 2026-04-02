@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Map, Mountain, Compass, Radio, Sparkles } from "lucide-react";
 import heroImage from "@/assets/rdm-hero-banner.png";
 import rdmBadge from "@/assets/rdm-logo-badge.png";
+import UserMenu from "@/components/UserMenu";
 
 const ease = [0.2, 0, 0, 1] as const;
 
