@@ -58,6 +58,11 @@ const HeroSection = () => {
         <div className="w-full h-px bg-primary animate-scan" />
       </div>
 
+      {/* User menu */}
+      <div className="absolute top-4 right-6 z-20">
+        <UserMenu />
+      </div>
+
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center">
         {/* Badge */}
