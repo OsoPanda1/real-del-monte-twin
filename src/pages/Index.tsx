@@ -10,13 +10,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {!introComplete && (
+      {!introComplete ? (
         <CinematicIntro onComplete={() => setIntroComplete(true)} />
+      ) : (
+        <>
+          <HeroSection />
+          <ExperienceHub />
+          <Footer />
+          <RealitoChat />
+        </>
       )}
-      <HeroSection />
-      <ExperienceHub />
-      <Footer />
-      <RealitoChat />
     </div>
   );
 };
