@@ -14,16 +14,297 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookpi_records: {
+        Row: {
+          agent_trace: Json | null
+          clean_text: string
+          created_at: string
+          emotion: string | null
+          id: string
+          intent: string | null
+          route_plan: Json | null
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          agent_trace?: Json | null
+          clean_text: string
+          created_at?: string
+          emotion?: string | null
+          id?: string
+          intent?: string | null
+          route_plan?: Json | null
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          agent_trace?: Json | null
+          clean_text?: string
+          created_at?: string
+          emotion?: string | null
+          id?: string
+          intent?: string | null
+          route_plan?: Json | null
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      businesses: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          hours: string | null
+          id: string
+          images: Json | null
+          lat: number
+          lng: number
+          name: string
+          owner_id: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          hours?: string | null
+          id?: string
+          images?: Json | null
+          lat: number
+          lng: number
+          name: string
+          owner_id?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          hours?: string | null
+          id?: string
+          images?: Json | null
+          lat?: number
+          lng?: number
+          name?: string
+          owner_id?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          agent_trace: Json | null
+          created_at: string
+          emotion: string | null
+          id: string
+          role: string
+          session_id: string
+          text: string
+          user_id: string | null
+        }
+        Insert: {
+          agent_trace?: Json | null
+          created_at?: string
+          emotion?: string | null
+          id?: string
+          role?: string
+          session_id: string
+          text: string
+          user_id?: string | null
+        }
+        Update: {
+          agent_trace?: Json | null
+          created_at?: string
+          emotion?: string | null
+          id?: string
+          role?: string
+          session_id?: string
+          text?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          event_date: string | null
+          id: string
+          location: string | null
+          organizer_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          location?: string | null
+          organizer_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          location?: string | null
+          organizer_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      places: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          elevation: number | null
+          id: string
+          images: Json | null
+          lat: number
+          lng: number
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          elevation?: number | null
+          id?: string
+          images?: Json | null
+          lat: number
+          lng: number
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          elevation?: number | null
+          id?: string
+          images?: Json | null
+          lat?: number
+          lng?: number
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      routes: {
+        Row: {
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          duration_minutes: number | null
+          id: string
+          name: string
+          updated_at: string
+          waypoints: Json | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration_minutes?: number | null
+          id?: string
+          name: string
+          updated_at?: string
+          waypoints?: Json | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration_minutes?: number | null
+          id?: string
+          name?: string
+          updated_at?: string
+          waypoints?: Json | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "turista" | "comerciante" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +431,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["turista", "comerciante", "admin"],
+    },
   },
 } as const
