@@ -1,1 +1,4 @@
 project_id = "zvxdzgeosfyafgwfpzdt"
+
+[functions.sovereign-engine]
+verify_jwt = false
