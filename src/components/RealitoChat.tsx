@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, X, Send, Sparkles, Brain,
@@ -165,7 +165,7 @@ function ProcessingIndicator({ agents }: { agents: MiniAIName[] }) {
   );
 }
 
-const RealitoChat = () => {
+const RealitoChat = forwardRef<HTMLDivElement>((_props, _ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -350,6 +350,8 @@ const RealitoChat = () => {
       </AnimatePresence>
     </>
   );
-};
+});
+
+RealitoChat.displayName = "RealitoChat";
 
 export default RealitoChat;
