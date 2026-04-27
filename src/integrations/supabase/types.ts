@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_interaction_log: {
+        Row: {
+          agents_invoked: Json | null
+          channel: string
+          created_at: string
+          cultural_corrections: Json | null
+          emotion: string | null
+          fallback_used: boolean
+          id: string
+          intent: string | null
+          latency_ms: number
+          prompt: string
+          response: string
+          session_id: string | null
+          source_model: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          agents_invoked?: Json | null
+          channel?: string
+          created_at?: string
+          cultural_corrections?: Json | null
+          emotion?: string | null
+          fallback_used?: boolean
+          id?: string
+          intent?: string | null
+          latency_ms?: number
+          prompt: string
+          response: string
+          session_id?: string | null
+          source_model?: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          agents_invoked?: Json | null
+          channel?: string
+          created_at?: string
+          cultural_corrections?: Json | null
+          emotion?: string | null
+          fallback_used?: boolean
+          id?: string
+          intent?: string | null
+          latency_ms?: number
+          prompt?: string
+          response?: string
+          session_id?: string | null
+          source_model?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bookpi_records: {
         Row: {
           agent_trace: Json | null
@@ -22,7 +76,10 @@ export type Database = {
           emotion: string | null
           id: string
           intent: string | null
+          prev_hash: string | null
+          record_hash: string | null
           route_plan: Json | null
+          sequence_number: number
           session_id: string
           user_id: string
         }
@@ -33,7 +90,10 @@ export type Database = {
           emotion?: string | null
           id?: string
           intent?: string | null
+          prev_hash?: string | null
+          record_hash?: string | null
           route_plan?: Json | null
+          sequence_number?: number
           session_id: string
           user_id: string
         }
@@ -44,7 +104,10 @@ export type Database = {
           emotion?: string | null
           id?: string
           intent?: string | null
+          prev_hash?: string | null
+          record_hash?: string | null
           route_plan?: Json | null
+          sequence_number?: number
           session_id?: string
           user_id?: string
         }
@@ -131,6 +194,36 @@ export type Database = {
         }
         Relationships: []
       }
+      digital_twins: {
+        Row: {
+          created_at: string
+          id: string
+          state: Json
+          twin_key: string
+          updated_at: string
+          version: number
+          zone: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          state?: Json
+          twin_key: string
+          updated_at?: string
+          version?: number
+          zone?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          state?: Json
+          twin_key?: string
+          updated_at?: string
+          version?: number
+          zone?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           category: string
@@ -164,6 +257,48 @@ export type Database = {
           organizer_id?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      kaos_signals: {
+        Row: {
+          classification: string
+          content_excerpt: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          noise_score: number
+          routed_to: string
+          signal_score: number
+          signal_type: string
+          toxicity_score: number
+          user_id: string | null
+        }
+        Insert: {
+          classification?: string
+          content_excerpt?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          noise_score?: number
+          routed_to?: string
+          signal_score?: number
+          signal_type?: string
+          toxicity_score?: number
+          user_id?: string | null
+        }
+        Update: {
+          classification?: string
+          content_excerpt?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          noise_score?: number
+          routed_to?: string
+          signal_score?: number
+          signal_type?: string
+          toxicity_score?: number
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -269,6 +404,102 @@ export type Database = {
           name?: string
           updated_at?: string
           waypoints?: Json | null
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json | null
+          resolved: boolean
+          severity: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          payload?: Json | null
+          resolved?: boolean
+          severity?: string
+          source?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          resolved?: boolean
+          severity?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      sovereign_identity: {
+        Row: {
+          badges: Json | null
+          created_at: string
+          handle: string | null
+          id: string
+          public_hash: string
+          territorial_anchor: string | null
+          trust_level: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badges?: Json | null
+          created_at?: string
+          handle?: string | null
+          id?: string
+          public_hash: string
+          territorial_anchor?: string | null
+          trust_level?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badges?: Json | null
+          created_at?: string
+          handle?: string | null
+          id?: string
+          public_hash?: string
+          territorial_anchor?: string | null
+          trust_level?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      system_metrics: {
+        Row: {
+          bucket: string
+          created_at: string
+          dimensions: Json | null
+          id: string
+          metric_key: string
+          metric_value: number
+        }
+        Insert: {
+          bucket?: string
+          created_at?: string
+          dimensions?: Json | null
+          id?: string
+          metric_key: string
+          metric_value: number
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          dimensions?: Json | null
+          id?: string
+          metric_key?: string
+          metric_value?: number
         }
         Relationships: []
       }
