@@ -1,258 +1,160 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft, Layers, Map, Navigation, Search,
-  ZoomIn, ZoomOut, Crosshair, Mountain, Eye,
-  Building2, Calendar, MapPin, Utensils, Church,
-  Database
-} from "lucide-react";
+import { ArrowLeft, Layers, Database, Mountain, Building2, Church, Eye, Navigation, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import realitoCommercios from "@/assets/realito-comercios.png";
 
-const ease = [0.2, 0, 0, 1] as const;
+const RDM_CENTER: [number, number] = [-98.6740, 20.1430];
 
 interface PlaceNode {
-  id: string;
-  name: string;
-  description: string | null;
-  category: string;
-  lat: number;
-  lng: number;
-  elevation: number | null;
-  status: string;
+  id: string; name: string; description: string | null;
+  category: string; lat: number; lng: number; elevation: number | null; status: string;
 }
 
-const CATEGORY_CONFIG: Record<string, { icon: typeof MapPin; color: string; label: string }> = {
-  heritage: { icon: Church, color: "bg-primary text-primary-foreground", label: "Patrimonio" },
-  commerce: { icon: Building2, color: "bg-accent text-accent-foreground", label: "Comercio" },
-  culture: { icon: Eye, color: "bg-violet-500 text-white", label: "Cultura" },
-  gastronomy: { icon: Utensils, color: "bg-amber-600 text-white", label: "Gastronomía" },
-  service: { icon: MapPin, color: "bg-emerald-600 text-white", label: "Servicios" },
+const CAT_COLOR: Record<string, string> = {
+  heritage: "#d4af37", commerce: "#3aa0ff", culture: "#a78bfa",
+  gastronomy: "#f59e0b", service: "#10b981",
 };
 
 const ExplorerView = () => {
   const navigate = useNavigate();
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
   const [places, setPlaces] = useState<PlaceNode[]>([]);
-  const [selectedNode, setSelectedNode] = useState<PlaceNode | null>(null);
-  const [activeLayers, setActiveLayers] = useState({ terrain: true, commerce: true, routes: false, heritage: true, culture: true });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<PlaceNode | null>(null);
+  const [search, setSearch] = useState("");
+  const [layers, setLayers] = useState({ heritage: true, commerce: true, culture: true, gastronomy: true, service: true });
 
   useEffect(() => {
-    const fetchPlaces = async () => {
-      const { data } = await supabase.from("places").select("*").eq("status", "public");
+    supabase.from("places").select("*").eq("status", "public").then(({ data }) => {
       if (data) setPlaces(data as PlaceNode[]);
-      setLoading(false);
-    };
-    fetchPlaces();
+    });
   }, []);
 
-  const filteredNodes = places.filter((n) => {
-    if (!activeLayers.commerce && n.category === "commerce") return false;
-    if (!activeLayers.heritage && n.category === "heritage") return false;
-    if (!activeLayers.culture && n.category === "culture") return false;
-    if (searchQuery && !n.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+  useEffect(() => {
+    if (!mapContainer.current || mapRef.current) return;
+    const map = new maplibregl.Map({
+      container: mapContainer.current,
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256, attribution: "© OpenStreetMap",
+          },
+          terrain: {
+            type: "raster-dem",
+            tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+            tileSize: 256, encoding: "terrarium", maxzoom: 15,
+          },
+        },
+        layers: [
+          { id: "osm", type: "raster", source: "osm" },
+          { id: "hillshade", type: "hillshade", source: "terrain", paint: { "hillshade-exaggeration": 0.6 } },
+        ],
+        terrain: { source: "terrain", exaggeration: 1.4 },
+      },
+      center: RDM_CENTER, zoom: 14, pitch: 55, bearing: -20,
+    });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+    mapRef.current = map;
+    return () => { map.remove(); mapRef.current = null; };
+  }, []);
 
-  const toggleLayer = (key: keyof typeof activeLayers) => {
-    setActiveLayers((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  // Markers
+  const markersRef = useRef<maplibregl.Marker[]>([]);
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return;
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+    const filtered = places.filter((p) =>
+      (layers as any)[p.category] !== false &&
+      (!search || p.name.toLowerCase().includes(search.toLowerCase()))
+    );
+    filtered.forEach((p) => {
+      const el = document.createElement("div");
+      el.style.cssText = `width:14px;height:14px;border-radius:50%;background:${CAT_COLOR[p.category] || "#888"};box-shadow:0 0 0 2px rgba(0,0,0,0.6),0 0 12px ${CAT_COLOR[p.category] || "#888"};cursor:pointer;border:2px solid #fff;`;
+      el.onclick = () => setSelected(p);
+      const m = new maplibregl.Marker({ element: el })
+        .setLngLat([Number(p.lng), Number(p.lat)])
+        .addTo(map);
+      markersRef.current.push(m);
+    });
+  }, [places, layers, search]);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Map Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-rdm-carbon via-card to-rdm-carbon" />
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: "50px 50px",
-          }}
-        />
-        <svg className="absolute inset-0 w-full h-full opacity-[0.04]" viewBox="0 0 1000 1000">
-          {[200, 300, 400, 500, 600].map((r) => (
-            <ellipse key={r} cx="500" cy="500" rx={r} ry={r * 0.7} fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
-          ))}
-        </svg>
-      </div>
-
-      {/* Floating nodes */}
-      <div className="absolute inset-0 z-[1]">
-        {filteredNodes.map((node, i) => {
-          const config = CATEGORY_CONFIG[node.category] || CATEGORY_CONFIG.service;
-          const TypeIcon = config.icon;
-          return (
-            <motion.div
-              key={node.id}
-              className="absolute group cursor-pointer"
-              style={{
-                left: `${12 + ((Number(node.lng) + 98.676) * -800 + i * 3) % 70}%`,
-                top: `${15 + ((Number(node.lat) - 20.226) * 600 + i * 5) % 60}%`,
-              }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease, delay: 0.3 + i * 0.08 }}
-              onClick={() => setSelectedNode(node)}
-            >
-              <div className="relative">
-                <motion.div
-                  className="w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.4)] transition-all duration-300 group-hover:scale-[2]"
-                />
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 glass-panel-strong border-sovereign px-4 py-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none min-w-[200px] z-20">
-                  <div className="flex items-center gap-2 mb-1">
-                    <TypeIcon className="w-3 h-3 text-primary" />
-                    <span className="text-xs font-sans font-semibold text-foreground">{node.name}</span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground mb-1">{node.description}</p>
-                  <div className="flex items-center gap-3">
-                    {node.elevation && <span className="tabular-data text-[9px] text-primary">{node.elevation}m</span>}
-                    <span className="tabular-data text-[9px] text-muted-foreground capitalize">{config.label}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+      <div ref={mapContainer} className="absolute inset-0" />
 
       {/* Top bar */}
-      <div className="relative z-10 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/")} className="glass-panel border-sovereign p-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            <div className="glass-panel border-sovereign px-4 py-2">
-              <h1 className="heritage-text text-lg">
-                <span className="text-gradient-gold">RDM‑X</span>
-                <span className="text-foreground"> Explorer</span>
-              </h1>
-            </div>
+      <div className="absolute top-0 left-0 right-0 z-10 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate("/")} className="glass-panel-strong border-sovereign p-2 text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <div className="glass-panel-strong border-sovereign px-4 py-2">
+            <h1 className="heritage-text text-lg">
+              <span className="text-gradient-gold">RDM-X</span><span className="text-foreground"> Explorer · MapLibre 3D</span>
+            </h1>
           </div>
-          <div className="glass-panel border-sovereign px-3 py-2 flex items-center gap-2">
-            <Search className="w-3 h-3 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Buscar lugar..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-xs text-foreground placeholder:text-muted-foreground outline-none w-32"
-            />
-          </div>
+        </div>
+        <div className="glass-panel-strong border-sovereign px-3 py-2 flex items-center gap-2">
+          <Search className="w-3 h-3 text-muted-foreground" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar..." className="bg-transparent text-xs text-foreground outline-none w-32 placeholder:text-muted-foreground" />
         </div>
       </div>
 
-      {/* Left panel */}
-      <motion.div
-        className="absolute left-4 top-20 z-10 glass-panel border-sovereign p-4 w-56"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, ease, delay: 0.3 }}
-      >
-        <h3 className="font-sans font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3">Capas del Gemelo</h3>
+      {/* Layers panel */}
+      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="absolute left-4 top-20 z-10 glass-panel-strong border-sovereign p-4 w-56">
+        <div className="flex items-center gap-2 mb-3">
+          <Layers className="w-3 h-3 text-primary" />
+          <h3 className="font-sans font-semibold text-xs text-muted-foreground uppercase tracking-wider">Capas Soberanas</h3>
+        </div>
         {[
-          { key: "terrain" as const, name: "Terreno 3D", icon: Mountain },
-          { key: "commerce" as const, name: "Comercios", icon: Building2 },
-          { key: "routes" as const, name: "Rutas", icon: Navigation },
-          { key: "heritage" as const, name: "Patrimonio", icon: Church },
-          { key: "culture" as const, name: "Cultura", icon: Eye },
-        ].map((layer) => (
-          <button
-            key={layer.key}
-            onClick={() => toggleLayer(layer.key)}
-            className="flex items-center gap-2 py-1.5 w-full group text-left"
-          >
-            <div className={`w-2 h-2 rounded-full transition-colors ${activeLayers[layer.key] ? "bg-primary" : "bg-muted-foreground/30"}`} />
-            <layer.icon className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-            <span className={`text-xs transition-colors ${activeLayers[layer.key] ? "text-foreground" : "text-muted-foreground"} group-hover:text-foreground`}>
-              {layer.name}
-            </span>
+          { key: "heritage", name: "Patrimonio", icon: Church },
+          { key: "commerce", name: "Comercios", icon: Building2 },
+          { key: "culture", name: "Cultura", icon: Eye },
+          { key: "gastronomy", name: "Gastronomía", icon: Mountain },
+          { key: "service", name: "Servicios", icon: Navigation },
+        ].map((l) => (
+          <button key={l.key} onClick={() => setLayers((p) => ({ ...p, [l.key]: !(p as any)[l.key] }))} className="flex items-center gap-2 py-1.5 w-full text-left">
+            <div className="w-2 h-2 rounded-full" style={{ background: (layers as any)[l.key] ? CAT_COLOR[l.key] : "rgba(255,255,255,0.2)" }} />
+            <l.icon className="w-3 h-3 text-muted-foreground" />
+            <span className={`text-xs ${(layers as any)[l.key] ? "text-foreground" : "text-muted-foreground"}`}>{l.name}</span>
           </button>
         ))}
-        <div className="mt-3 pt-3 border-t border-border/20">
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-            <Database className="w-3 h-3 text-primary" />
-            <span>{places.length} lugares · Lovable Cloud</span>
-          </div>
-        </div>
-        <div className="mt-4 rounded-lg overflow-hidden border-sovereign">
-          <img src={realitoCommercios} alt="Realito en comercios" className="w-full h-auto" loading="lazy" />
+        <div className="mt-3 pt-3 border-t border-border/20 flex items-center gap-2 text-[10px] text-muted-foreground">
+          <Database className="w-3 h-3 text-primary" />
+          <span>{places.length} lugares · MapLibre+OSM</span>
         </div>
       </motion.div>
 
-      {/* Right controls */}
-      <motion.div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex flex-col gap-2"
-        initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease, delay: 0.4 }}>
-        {[ZoomIn, ZoomOut, Crosshair].map((Icon, i) => (
-          <button key={i} className="glass-panel border-sovereign p-2.5 text-muted-foreground hover:text-foreground transition-colors">
-            <Icon className="w-4 h-4" />
-          </button>
-        ))}
-      </motion.div>
-
-      {/* Selected node detail */}
+      {/* Selected */}
       <AnimatePresence>
-        {selectedNode && (
-          <motion.div
-            className="absolute right-4 top-20 z-20 glass-panel-strong border-sovereign p-5 w-72"
-            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.3, ease }}
-          >
+        {selected && (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
+            className="absolute right-4 top-20 z-20 glass-panel-strong border-sovereign p-5 w-72">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-sans font-semibold text-sm text-foreground">{selectedNode.name}</h4>
-              <button onClick={() => setSelectedNode(null)} className="text-muted-foreground hover:text-foreground text-xs">✕</button>
+              <h4 className="font-sans font-semibold text-sm">{selected.name}</h4>
+              <button onClick={() => setSelected(null)} className="text-muted-foreground text-xs">✕</button>
             </div>
-            <p className="text-xs text-muted-foreground mb-3">{selectedNode.description}</p>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="tabular-data text-[10px] text-muted-foreground">Tipo</span>
-                <span className="tabular-data text-[10px] text-primary">{CATEGORY_CONFIG[selectedNode.category]?.label || selectedNode.category}</span>
-              </div>
-              {selectedNode.elevation && (
-                <div className="flex justify-between">
-                  <span className="tabular-data text-[10px] text-muted-foreground">Elevación</span>
-                  <span className="tabular-data text-[10px] text-foreground">{selectedNode.elevation} msnm</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span className="tabular-data text-[10px] text-muted-foreground">Coordenadas</span>
-                <span className="tabular-data text-[10px] text-foreground">{Number(selectedNode.lat).toFixed(4)}°N, {Math.abs(Number(selectedNode.lng)).toFixed(4)}°W</span>
-              </div>
+            <p className="text-xs text-muted-foreground mb-3">{selected.description}</p>
+            <div className="space-y-1 text-[10px] tabular-data">
+              <div className="flex justify-between"><span className="text-muted-foreground">Categoría</span><span className="text-primary">{selected.category}</span></div>
+              {selected.elevation && <div className="flex justify-between"><span className="text-muted-foreground">Elevación</span><span>{selected.elevation} msnm</span></div>}
+              <div className="flex justify-between"><span className="text-muted-foreground">Coords</span><span>{Number(selected.lat).toFixed(4)}, {Number(selected.lng).toFixed(4)}</span></div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Bottom status */}
-      <motion.div
-        className="absolute bottom-4 left-4 right-4 z-10 glass-panel-strong border-sovereign px-5 py-3 flex items-center justify-between"
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease, delay: 0.5 }}
-      >
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse-gold" />
-            <span className="tabular-data text-[10px] text-muted-foreground">GEMELO ACTIVO</span>
-          </div>
-          <span className="tabular-data text-xs text-foreground">{filteredNodes.length}/{places.length} nodos</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="text-center">
-            <span className="tabular-data text-[10px] text-muted-foreground block">Lat</span>
-            <span className="tabular-data text-xs text-foreground">20.2290°N</span>
-          </div>
-          <div className="text-center">
-            <span className="tabular-data text-[10px] text-muted-foreground block">Lng</span>
-            <span className="tabular-data text-xs text-foreground">98.6740°W</span>
-          </div>
-          <div className="text-center hidden sm:block">
-            <span className="tabular-data text-[10px] text-muted-foreground block">Alt</span>
-            <span className="tabular-data text-xs text-foreground">2,660m</span>
-          </div>
-        </div>
-      </motion.div>
+      <div className="absolute bottom-4 left-4 z-10 glass-panel-strong border-sovereign px-4 py-2 flex items-center gap-3">
+        <div className="w-2 h-2 rounded-full bg-primary animate-pulse-gold" />
+        <span className="tabular-data text-[10px] text-muted-foreground">GEMELO 3D · TERRENO REAL · {places.length} NODOS</span>
+      </div>
     </div>
   );
 };
