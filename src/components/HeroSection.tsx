@@ -64,10 +64,10 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 text-center">
+      <div className="relative z-10 container mx-auto px-6 text-center pt-24 pb-32">
         {/* Badge */}
         <motion.div
-          className="flex justify-center mb-6"
+          className="flex justify-center mb-4"
           initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease, delay: 0.2 }}
@@ -75,7 +75,7 @@ const HeroSection = () => {
           <img
             src={rdmBadge}
             alt="RDM Digital Badge"
-            className="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-xl"
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-xl"
           />
         </motion.div>
 
@@ -83,15 +83,15 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease, delay: 0.4 }}
-          className="mb-4"
+          className="mb-3"
         >
-          <span className="tabular-data text-xs uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="tabular-data text-[10px] sm:text-xs uppercase tracking-[0.3em] text-muted-foreground">
             TAMV Online Network · Soberanía Digital
           </span>
         </motion.div>
 
         <motion.h1
-          className="heritage-text text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.9] mb-2"
+          className="heritage-text text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95] mb-3"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease, delay: 0.6 }}
@@ -101,7 +101,7 @@ const HeroSection = () => {
         </motion.h1>
 
         <motion.p
-          className="heritage-text text-xl sm:text-2xl md:text-3xl text-foreground/80 mb-2 max-w-3xl mx-auto"
+          className="heritage-text text-lg sm:text-xl md:text-2xl text-foreground/80 mb-2 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease, delay: 0.8 }}
@@ -110,7 +110,7 @@ const HeroSection = () => {
         </motion.p>
 
         <motion.p
-          className="text-sm text-muted-foreground max-w-xl mx-auto mb-10"
+          className="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease, delay: 1.0 }}
