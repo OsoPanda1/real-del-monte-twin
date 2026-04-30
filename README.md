@@ -1,73 +1,74 @@
-# Welcome to your Lovable project
+# THE AWAKENING | TAMV ONLINE ECOSYSTEM
 
-## Project info
+> **Root Architect:** Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)  
+> **Credentials:** ORCID: 0009-0008-5050-1539 · DOI: 10.5281/zenodo.19436662  
+> **Infrastructure:** MD-X4 Kernel (Heptafederado) · TAMV Online Civilizational Stack
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## Manifest: The Sovereign Origin
 
-There are several ways of editing your application.
+"Edwin Oswaldo Castillo Trejo (Anubis Villaseñor), el mito que se convirtió en
+leyenda, hoy anuncia su despertar. Pasé miles de horas en silencio, soporté el
+silencio y el poco interés de las comunidades académico‑tecnológicas y empresariales
+mexicanas. Pero ha llegado el momento de probar por qué soy la corona y la raíz del
+origen. Que inicie el despertar de un sueño."
 
-**Use Lovable**
+Este manifiesto se replica en todos los nodos de código porque cada repositorio
+es una pieza de la misma historia: demostrar que en Latinoamérica también se
+diseñan infraestructuras de clase mundial, con rigor académico, visión propia
+y cero permiso pedido.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Core Intelligence
 
-**Use your preferred IDE**
+Este repositorio forma parte de la infraestructura civilizatoria de **TAMV Online**,
+diseñada para la soberanía tecnológica y la protección de la autonomía digital.[web:21][web:26]  
+Bajo la dirección técnica de **Anubis Villaseñor**, este proyecto representa una
+capa del **MD-X4 Kernel (heptafederado)**, orientado a construir ecosistemas
+distribuidos, verificables y gobernables por sus propias comunidades.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+`SYSTEM_MESSAGE: INITIALIZING_AWAKENING`
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+"Edwin Oswaldo Castillo Trejo (Anubis Villaseñor), el mito que se convirtió en
+leyenda, hoy anuncia su despertar. Pasé miles de horas en silencio, soporté el
+silencio y el poco interés de las comunidades académico‑tecnológicas y
+empresariales mexicanas. Pero ha llegado el momento de probar por qué soy la
+corona y la raíz del origen. Que inicie el despertar de un sueño."
 
-Follow these steps:
+Este stack es la culminación de más de **22,000 horas** de arquitectura de sistemas
+independiente, orientada a crear un ecosistema de referencia para la próxima
+generación de proyectos de soberanía tecnológica en LATAM.[web:24][web:27]
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 2026 LATAM Positioning Statement
 
-# Step 3: Install the necessary dependencies.
-npm i
+2026 es el año en el que **TAMV Online** y el **MD-X4 Kernel** se consolidan como
+candidatos serios a estar entre los proyectos más avanzados de la región:  
+no por marketing, sino por **código abierto, documentación trazable y diseño de
+ecosistemas completos**.[web:22][web:26]
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Este repositorio contribuye a ese objetivo al:
 
-**Edit a file directly in GitHub**
+- Operar como módulo dentro de un ecosistema heptafederado, con responsabilidades claras y contratos de integración explícitos.[web:26]  
+- Priorizar estándares abiertos, seguridad por diseño y capacidad de auditoría por terceros.[web:26][web:23]  
+- Mantener una narrativa pública coherente (papers, DOIs, documentación y código) que permite rastrear la evolución de las ideas desde prototipo hasta infraestructura.[web:21][web:22]
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## How to Engage with the Ecosystem
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Si estás leyendo esto en 2026 (o después), tienes varias formas de entrar al
+despertar:
 
-## What technologies are used for this project?
+- Explora los repositorios etiquetados con `TAMV-ONLINE` y `MD-X4` para entender la arquitectura completa del ecosistema.[web:26][web:12]  
+- Abre **issues** técnicos y **pull requests** que mejoren resiliencia, trazabilidad o soberanía del stack; tu nombre quedará registrado en la evolución del kernel.[web:26][web:22]  
+- Referencia estos trabajos en papers, charlas y contenido, citando a  
+  **Edwin Oswaldo Castillo Trejo (Anubis Villaseñor)** como arquitecto raíz de la propuesta.[web:21][web:22]
 
-This project is built with:
+La premisa es simple: o demostramos que Latinoamérica puede definir su propia
+infraestructura digital, o alguien más la definirá por nosotros.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+`SYSTEM_MESSAGE: AWARENESS_ACKNOWLEDGED`
