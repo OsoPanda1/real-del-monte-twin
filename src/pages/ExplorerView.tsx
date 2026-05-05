@@ -597,6 +597,17 @@ const ExplorerView = () => {
                     </>
                   )}
                 </div>
+                {(selected.type === "place" || selected.type === "business") && (
+                  <div className="mb-3">
+                    <QRCheckIn
+                      targetType={selected.type as "place" | "business"}
+                      targetId={selected.data.id}
+                      targetName={selected.data.name}
+                      targetLat={Number(selected.data.lat)}
+                      targetLng={Number(selected.data.lng)}
+                    />
+                  </div>
+                )}
                 {canEdit(selected.data, selected.type) && (
                   <div className="flex gap-2">
                     <button onClick={openEdit} className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded text-xs">
