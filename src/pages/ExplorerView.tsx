@@ -11,9 +11,15 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import QRCheckIn from "@/components/QRCheckIn";
 
 const RDM_CENTER: [number, number] = [-98.6740, 20.1430];
 
+interface GeoZone {
+  id: string; name: string; zone_type: string; description: string | null;
+  polygon: any; center_lat: number | null; center_lng: number | null;
+  alert_level: string; fill_color: string; fill_opacity: number; active: boolean;
+}
 interface PlaceNode {
   id: string; name: string; description: string | null;
   category: string; lat: number; lng: number; elevation: number | null; status: string;
@@ -51,6 +57,8 @@ const ExplorerView = () => {
   const [businesses, setBusinesses] = useState<BusinessNode[]>([]);
   const [events, setEvents] = useState<EventNode[]>([]);
   const [kaos, setKaos] = useState<KaosSignal[]>([]);
+  const [zones, setZones] = useState<GeoZone[]>([]);
+  const [showZones, setShowZones] = useState(true);
 
   const [selected, setSelected] = useState<{ type: EntityType; data: any } | null>(null);
   const [editing, setEditing] = useState(false);
@@ -81,16 +89,18 @@ const ExplorerView = () => {
 
   // Load data
   const loadAll = useCallback(async () => {
-    const [p, b, e, k] = await Promise.all([
+    const [p, b, e, k, z] = await Promise.all([
       supabase.from("places").select("*").eq("status", "public"),
       supabase.from("businesses").select("*").eq("status", "public"),
       supabase.from("events").select("*").order("event_date", { ascending: true }),
       supabase.from("kaos_signals").select("id, classification, toxicity_score, noise_score, signal_score, content_excerpt, created_at").order("created_at", { ascending: false }).limit(50),
+      supabase.from("geo_zones").select("*").eq("active", true),
     ]);
     if (p.data) setPlaces(p.data as PlaceNode[]);
     if (b.data) setBusinesses(b.data as BusinessNode[]);
     if (e.data) setEvents(e.data as EventNode[]);
     if (k.data) setKaos(k.data as KaosSignal[]);
+    if (z.data) setZones(z.data as GeoZone[]);
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
