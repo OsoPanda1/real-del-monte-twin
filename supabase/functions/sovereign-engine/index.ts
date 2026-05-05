@@ -453,6 +453,7 @@ Deno.serve(async (req) => {
   const text: string = (body?.text || "").toString().slice(0, 2000).trim();
   const sessionId: string = body?.sessionId || `sess-${crypto.randomUUID()}`;
   const channel: string = body?.channel || "realito";
+  const model: string = body?.model || "google/gemini-3-flash-preview";
 
   if (!text) {
     return new Response(JSON.stringify({ error: "empty_text" }), {
@@ -558,7 +559,7 @@ Deno.serve(async (req) => {
   let llmStatus = 200;
 
   const sys = buildSystemPrompt((plan as any).skillContext || "", channel);
-  const llm = await callLovableAI(sys, clean);
+  const llm = await callLovableAI(sys, clean, model);
   llmStatus = llm.status;
 
   if (llm.ok && llm.text) {
