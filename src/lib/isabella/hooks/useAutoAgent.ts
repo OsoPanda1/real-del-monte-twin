@@ -101,15 +101,12 @@ export function useAutoAgent() {
       setLoading(false);
       processingRef.current = false;
     }
-  }, [session.sessionId]);
+  }, [session.sessionId, model]);
 
   const reset = useCallback(() => setSession(newSession()), []);
 
   return {
-    session,
-    send,
-    loading,
-    reset,
+    session, send, loading, reset, model, setModel,
     messages: session.messages,
     activeAgents: session.activeAgents,
     currentEmotion: session.currentEmotion,
