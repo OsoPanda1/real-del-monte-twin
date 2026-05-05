@@ -193,6 +193,33 @@ const ExplorerView = () => {
     }
   }, [places, businesses, layers, search, mapLoaded]);
 
+  // GEO ZONES polygons (geofencing)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapLoaded) return;
+    if (map.getLayer("geo-zones-fill")) map.removeLayer("geo-zones-fill");
+    if (map.getLayer("geo-zones-outline")) map.removeLayer("geo-zones-outline");
+    if (map.getSource("geo-zones")) map.removeSource("geo-zones");
+    if (!showZones || zones.length === 0) return;
+    const features = zones
+      .filter((z) => Array.isArray(z.polygon) && z.polygon.length >= 3)
+      .map((z) => ({
+        type: "Feature" as const,
+        geometry: { type: "Polygon" as const, coordinates: [z.polygon as [number, number][]] },
+        properties: { name: z.name, fill: z.fill_color, opacity: z.fill_opacity, alert: z.alert_level },
+      }));
+    if (features.length === 0) return;
+    map.addSource("geo-zones", { type: "geojson", data: { type: "FeatureCollection", features } });
+    map.addLayer({
+      id: "geo-zones-fill", type: "fill", source: "geo-zones",
+      paint: { "fill-color": ["get", "fill"], "fill-opacity": ["get", "opacity"] },
+    });
+    map.addLayer({
+      id: "geo-zones-outline", type: "line", source: "geo-zones",
+      paint: { "line-color": ["get", "fill"], "line-width": 1.5, "line-opacity": 0.85 },
+    });
+  }, [zones, showZones, mapLoaded]);
+
   // RADAR Quetzalcóatl overlay (kaos signals zones)
   useEffect(() => {
     const map = mapRef.current;
