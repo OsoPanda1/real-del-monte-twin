@@ -136,10 +136,15 @@ const ExplorerView = () => {
             tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
             tileSize: 256, encoding: "terrarium", maxzoom: 15,
           },
+          hillshadeSrc: {
+            type: "raster-dem",
+            tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+            tileSize: 256, encoding: "terrarium", maxzoom: 15,
+          },
         },
         layers: [
           { id: "osm", type: "raster", source: "osm" },
-          { id: "hillshade", type: "hillshade", source: "terrain", paint: { "hillshade-exaggeration": 0.6 } },
+          { id: "hillshade", type: "hillshade", source: "hillshadeSrc", paint: { "hillshade-exaggeration": 0.6 } },
         ],
         terrain: { source: "terrain", exaggeration: 1.4 },
       },
