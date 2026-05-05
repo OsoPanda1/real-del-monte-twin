@@ -31,6 +31,7 @@ function newSession(): IsabellaSessionState {
 export function useAutoAgent() {
   const [session, setSession] = useState<IsabellaSessionState>(newSession);
   const [loading, setLoading] = useState(false);
+  const [model, setModel] = useState<string>("google/gemini-3-flash-preview");
   const processingRef = useRef(false);
 
   const send = useCallback(async (text: string) => {
@@ -48,7 +49,7 @@ export function useAutoAgent() {
 
     try {
       const { data, error } = await supabase.functions.invoke("sovereign-engine", {
-        body: { text, sessionId: session.sessionId, channel: "realito" },
+        body: { text, sessionId: session.sessionId, channel: "realito", model },
       });
 
       if (error || !data?.ok) {
@@ -100,15 +101,12 @@ export function useAutoAgent() {
       setLoading(false);
       processingRef.current = false;
     }
-  }, [session.sessionId]);
+  }, [session.sessionId, model]);
 
   const reset = useCallback(() => setSession(newSession()), []);
 
   return {
-    session,
-    send,
-    loading,
-    reset,
+    session, send, loading, reset, model, setModel,
     messages: session.messages,
     activeAgents: session.activeAgents,
     currentEmotion: session.currentEmotion,

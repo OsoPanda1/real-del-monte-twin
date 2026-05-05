@@ -367,16 +367,23 @@ async function culturalGuardian(text: string, ctx: Ctx) {
 async function callLovableAI(
   systemPrompt: string,
   userPrompt: string,
-): Promise<{ text: string; ok: boolean; status: number }> {
+  model: string = "google/gemini-3-flash-preview",
+): Promise<{ text: string; ok: boolean; status: number; model: string }> {
+  const ALLOWED = new Set([
+    "google/gemini-3-flash-preview",
+    "google/gemini-2.5-flash",
+    "google/gemini-2.5-flash-lite",
+    "google/gemini-2.5-pro",
+    "openai/gpt-5-mini",
+    "openai/gpt-5-nano",
+  ]);
+  const safeModel = ALLOWED.has(model) ? model : "google/gemini-3-flash-preview";
   try {
     const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: safeModel,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -386,17 +393,13 @@ async function callLovableAI(
     if (!r.ok) {
       const errTxt = await r.text();
       console.error("Lovable AI error", r.status, errTxt);
-      return { text: "", ok: false, status: r.status };
+      return { text: "", ok: false, status: r.status, model: safeModel };
     }
     const j = await r.json();
-    return {
-      text: j?.choices?.[0]?.message?.content || "",
-      ok: true,
-      status: 200,
-    };
+    return { text: j?.choices?.[0]?.message?.content || "", ok: true, status: 200, model: safeModel };
   } catch (e) {
     console.error("Lovable AI fetch failed", e);
-    return { text: "", ok: false, status: 500 };
+    return { text: "", ok: false, status: 500, model: safeModel };
   }
 }
 
@@ -450,6 +453,7 @@ Deno.serve(async (req) => {
   const text: string = (body?.text || "").toString().slice(0, 2000).trim();
   const sessionId: string = body?.sessionId || `sess-${crypto.randomUUID()}`;
   const channel: string = body?.channel || "realito";
+  const model: string = body?.model || "google/gemini-3-flash-preview";
 
   if (!text) {
     return new Response(JSON.stringify({ error: "empty_text" }), {
@@ -555,7 +559,7 @@ Deno.serve(async (req) => {
   let llmStatus = 200;
 
   const sys = buildSystemPrompt((plan as any).skillContext || "", channel);
-  const llm = await callLovableAI(sys, clean);
+  const llm = await callLovableAI(sys, clean, model);
   llmStatus = llm.status;
 
   if (llm.ok && llm.text) {

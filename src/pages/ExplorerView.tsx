@@ -11,9 +11,15 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import QRCheckIn from "@/components/QRCheckIn";
 
 const RDM_CENTER: [number, number] = [-98.6740, 20.1430];
 
+interface GeoZone {
+  id: string; name: string; zone_type: string; description: string | null;
+  polygon: any; center_lat: number | null; center_lng: number | null;
+  alert_level: string; fill_color: string; fill_opacity: number; active: boolean;
+}
 interface PlaceNode {
   id: string; name: string; description: string | null;
   category: string; lat: number; lng: number; elevation: number | null; status: string;
@@ -51,6 +57,8 @@ const ExplorerView = () => {
   const [businesses, setBusinesses] = useState<BusinessNode[]>([]);
   const [events, setEvents] = useState<EventNode[]>([]);
   const [kaos, setKaos] = useState<KaosSignal[]>([]);
+  const [zones, setZones] = useState<GeoZone[]>([]);
+  const [showZones, setShowZones] = useState(true);
 
   const [selected, setSelected] = useState<{ type: EntityType; data: any } | null>(null);
   const [editing, setEditing] = useState(false);
@@ -81,16 +89,18 @@ const ExplorerView = () => {
 
   // Load data
   const loadAll = useCallback(async () => {
-    const [p, b, e, k] = await Promise.all([
+    const [p, b, e, k, z] = await Promise.all([
       supabase.from("places").select("*").eq("status", "public"),
       supabase.from("businesses").select("*").eq("status", "public"),
       supabase.from("events").select("*").order("event_date", { ascending: true }),
       supabase.from("kaos_signals").select("id, classification, toxicity_score, noise_score, signal_score, content_excerpt, created_at").order("created_at", { ascending: false }).limit(50),
+      supabase.from("geo_zones").select("*").eq("active", true),
     ]);
     if (p.data) setPlaces(p.data as PlaceNode[]);
     if (b.data) setBusinesses(b.data as BusinessNode[]);
     if (e.data) setEvents(e.data as EventNode[]);
     if (k.data) setKaos(k.data as KaosSignal[]);
+    if (z.data) setZones(z.data as GeoZone[]);
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
@@ -103,6 +113,7 @@ const ExplorerView = () => {
       .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, loadAll)
       .on("postgres_changes", { event: "*", schema: "public", table: "events" }, loadAll)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "kaos_signals" }, loadAll)
+      .on("postgres_changes", { event: "*", schema: "public", table: "geo_zones" }, loadAll)
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [loadAll]);
@@ -125,10 +136,15 @@ const ExplorerView = () => {
             tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
             tileSize: 256, encoding: "terrarium", maxzoom: 15,
           },
+          hillshadeSrc: {
+            type: "raster-dem",
+            tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+            tileSize: 256, encoding: "terrarium", maxzoom: 15,
+          },
         },
         layers: [
           { id: "osm", type: "raster", source: "osm" },
-          { id: "hillshade", type: "hillshade", source: "terrain", paint: { "hillshade-exaggeration": 0.6 } },
+          { id: "hillshade", type: "hillshade", source: "hillshadeSrc", paint: { "hillshade-exaggeration": 0.6 } },
         ],
         terrain: { source: "terrain", exaggeration: 1.4 },
       },
@@ -182,6 +198,33 @@ const ExplorerView = () => {
         .forEach((b) => addMarker(Number(b.lng), Number(b.lat), "#3aa0ff", "rgba(0,30,80,0.7)", () => { setSelected({ type: "business", data: b }); setEditing(false); }, "$"));
     }
   }, [places, businesses, layers, search, mapLoaded]);
+
+  // GEO ZONES polygons (geofencing)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapLoaded) return;
+    if (map.getLayer("geo-zones-fill")) map.removeLayer("geo-zones-fill");
+    if (map.getLayer("geo-zones-outline")) map.removeLayer("geo-zones-outline");
+    if (map.getSource("geo-zones")) map.removeSource("geo-zones");
+    if (!showZones || zones.length === 0) return;
+    const features = zones
+      .filter((z) => Array.isArray(z.polygon) && z.polygon.length >= 3)
+      .map((z) => ({
+        type: "Feature" as const,
+        geometry: { type: "Polygon" as const, coordinates: [z.polygon as [number, number][]] },
+        properties: { name: z.name, fill: z.fill_color, opacity: z.fill_opacity, alert: z.alert_level },
+      }));
+    if (features.length === 0) return;
+    map.addSource("geo-zones", { type: "geojson", data: { type: "FeatureCollection", features } });
+    map.addLayer({
+      id: "geo-zones-fill", type: "fill", source: "geo-zones",
+      paint: { "fill-color": ["get", "fill"], "fill-opacity": ["get", "opacity"] },
+    });
+    map.addLayer({
+      id: "geo-zones-outline", type: "line", source: "geo-zones",
+      paint: { "line-color": ["get", "fill"], "line-width": 1.5, "line-opacity": 0.85 },
+    });
+  }, [zones, showZones, mapLoaded]);
 
   // RADAR Quetzalcóatl overlay (kaos signals zones)
   useEffect(() => {
@@ -457,6 +500,11 @@ const ExplorerView = () => {
             <Radio className="w-3 h-3 text-muted-foreground" />
             <span className={`text-xs ${showRadar ? "text-foreground" : "text-muted-foreground"}`}>Radar Quetzalcóatl</span>
           </button>
+          <button onClick={() => setShowZones(!showZones)} className="flex items-center gap-2 py-1.5 w-full text-left">
+            <div className={`w-2 h-2 rounded-full ${showZones ? "bg-amber-400" : "bg-white/20"}`} />
+            <Layers className="w-3 h-3 text-muted-foreground" />
+            <span className={`text-xs ${showZones ? "text-foreground" : "text-muted-foreground"}`}>Geo Zonas ({zones.length})</span>
+          </button>
         </div>
 
         {/* Create buttons */}
@@ -549,6 +597,17 @@ const ExplorerView = () => {
                     </>
                   )}
                 </div>
+                {(selected.type === "place" || selected.type === "business") && (
+                  <div className="mb-3">
+                    <QRCheckIn
+                      targetType={selected.type as "place" | "business"}
+                      targetId={selected.data.id}
+                      targetName={selected.data.name}
+                      targetLat={Number(selected.data.lat)}
+                      targetLng={Number(selected.data.lng)}
+                    />
+                  </div>
+                )}
                 {canEdit(selected.data, selected.type) && (
                   <div className="flex gap-2">
                     <button onClick={openEdit} className="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded text-xs">
