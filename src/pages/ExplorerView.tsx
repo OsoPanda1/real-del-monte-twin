@@ -113,6 +113,7 @@ const ExplorerView = () => {
       .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, loadAll)
       .on("postgres_changes", { event: "*", schema: "public", table: "events" }, loadAll)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "kaos_signals" }, loadAll)
+      .on("postgres_changes", { event: "*", schema: "public", table: "geo_zones" }, loadAll)
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [loadAll]);
