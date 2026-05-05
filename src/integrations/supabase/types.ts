@@ -226,37 +226,97 @@ export type Database = {
       }
       events: {
         Row: {
+          capacity: number | null
           category: string
           created_at: string
           description: string | null
           event_date: string | null
           id: string
+          instructor: string | null
+          is_workshop: boolean
           location: string | null
+          materials_url: string | null
           organizer_id: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          capacity?: number | null
           category?: string
           created_at?: string
           description?: string | null
           event_date?: string | null
           id?: string
+          instructor?: string | null
+          is_workshop?: boolean
           location?: string | null
+          materials_url?: string | null
           organizer_id?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          capacity?: number | null
           category?: string
           created_at?: string
           description?: string | null
           event_date?: string | null
           id?: string
+          instructor?: string | null
+          is_workshop?: boolean
           location?: string | null
+          materials_url?: string | null
           organizer_id?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      geo_zones: {
+        Row: {
+          active: boolean
+          alert_level: string
+          center_lat: number | null
+          center_lng: number | null
+          created_at: string
+          description: string | null
+          fill_color: string
+          fill_opacity: number
+          id: string
+          name: string
+          polygon: Json
+          updated_at: string
+          zone_type: string
+        }
+        Insert: {
+          active?: boolean
+          alert_level?: string
+          center_lat?: number | null
+          center_lng?: number | null
+          created_at?: string
+          description?: string | null
+          fill_color?: string
+          fill_opacity?: number
+          id?: string
+          name: string
+          polygon?: Json
+          updated_at?: string
+          zone_type?: string
+        }
+        Update: {
+          active?: boolean
+          alert_level?: string
+          center_lat?: number | null
+          center_lng?: number | null
+          created_at?: string
+          description?: string | null
+          fill_color?: string
+          fill_opacity?: number
+          id?: string
+          name?: string
+          polygon?: Json
+          updated_at?: string
+          zone_type?: string
         }
         Relationships: []
       }
@@ -518,6 +578,45 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      visit_checkins: {
+        Row: {
+          created_at: string
+          distance_meters: number | null
+          id: string
+          qr_token: string | null
+          target_id: string
+          target_type: string
+          user_id: string
+          user_lat: number
+          user_lng: number
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          distance_meters?: number | null
+          id?: string
+          qr_token?: string | null
+          target_id: string
+          target_type: string
+          user_id: string
+          user_lat: number
+          user_lng: number
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          distance_meters?: number | null
+          id?: string
+          qr_token?: string | null
+          target_id?: string
+          target_type?: string
+          user_id?: string
+          user_lat?: number
+          user_lng?: number
+          verified?: boolean
         }
         Relationships: []
       }
