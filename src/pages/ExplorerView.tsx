@@ -500,6 +500,11 @@ const ExplorerView = () => {
             <Radio className="w-3 h-3 text-muted-foreground" />
             <span className={`text-xs ${showRadar ? "text-foreground" : "text-muted-foreground"}`}>Radar Quetzalcóatl</span>
           </button>
+          <button onClick={() => setShowZones(!showZones)} className="flex items-center gap-2 py-1.5 w-full text-left">
+            <div className={`w-2 h-2 rounded-full ${showZones ? "bg-amber-400" : "bg-white/20"}`} />
+            <Layers className="w-3 h-3 text-muted-foreground" />
+            <span className={`text-xs ${showZones ? "text-foreground" : "text-muted-foreground"}`}>Geo Zonas ({zones.length})</span>
+          </button>
         </div>
 
         {/* Create buttons */}
