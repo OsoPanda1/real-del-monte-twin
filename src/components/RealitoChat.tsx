@@ -173,7 +173,7 @@ const RealitoChat = forwardRef<HTMLDivElement>((_props, _ref) => {
 
   const {
     messages, send, loading, activeAgents,
-    currentEmotion, bookpiCount, reset,
+    currentEmotion, bookpiCount, reset, model, setModel,
   } = useAutoAgent();
 
   // Auto-scroll
@@ -336,12 +336,21 @@ const RealitoChat = forwardRef<HTMLDivElement>((_props, _ref) => {
                   <Send className="w-3 h-3 text-primary-foreground" />
                 </button>
               </div>
-              <div className="flex items-center justify-between mt-1.5 px-1">
+              <div className="flex items-center justify-between mt-1.5 px-1 gap-2">
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="bg-transparent text-[8px] text-muted-foreground/80 outline-none border border-border/30 rounded px-1 py-0.5"
+                  title="Modelo IA"
+                >
+                  <option value="google/gemini-3-flash-preview">Gemini 3 Flash</option>
+                  <option value="google/gemini-2.5-flash">Gemini 2.5 Flash</option>
+                  <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
+                  <option value="openai/gpt-5-mini">GPT-5 Mini</option>
+                  <option value="openai/gpt-5-nano">GPT-5 Nano</option>
+                </select>
                 <span className="tabular-data text-[8px] text-muted-foreground/60">
-                  TAMVAI API v1 · Isabella Core™
-                </span>
-                <span className="tabular-data text-[8px] text-muted-foreground/60">
-                  RDM-X Soberano
+                  TAMVAI · RDM-X
                 </span>
               </div>
             </div>
