@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Map, Compass, MessageCircle, Clock, Mountain } from "lucide-react";
 import heroImage from "@/assets/rdm-hero-banner.png";
-import rdmBadge from "@/assets/rdm-logo-badge.png";
+
 import UserMenu from "@/components/UserMenu";
 
 const ease = [0.2, 0, 0, 1] as const;
@@ -32,14 +32,6 @@ const HeroSection = () => {
       <div className="absolute top-4 right-6 z-20"><UserMenu /></div>
 
       <div className="relative z-10 container mx-auto px-6 text-center pt-24 pb-32">
-        <motion.div
-          className="flex justify-center mb-4"
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease, delay: 0.2 }}
-        >
-          <img src={rdmBadge} alt="Insignia Real del Monte" className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-xl" />
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
