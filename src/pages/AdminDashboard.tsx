@@ -307,6 +307,8 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
+        {activeTab === "zones" && <GeoZonesAdmin />}
+
         {activeTab === "aztek" && metrics && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <div className="mb-6 glass-panel border-sovereign p-5 bg-gradient-to-br from-amber-950/20 to-transparent">
