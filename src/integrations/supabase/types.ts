@@ -368,6 +368,9 @@ export type Database = {
           created_at: string
           description: string | null
           elevation: number | null
+          featured: boolean
+          highlights: Json | null
+          hours: string | null
           id: string
           images: Json | null
           lat: number
@@ -375,12 +378,16 @@ export type Database = {
           name: string
           status: string
           updated_at: string
+          visit_minutes: number | null
         }
         Insert: {
           category?: string
           created_at?: string
           description?: string | null
           elevation?: number | null
+          featured?: boolean
+          highlights?: Json | null
+          hours?: string | null
           id?: string
           images?: Json | null
           lat: number
@@ -388,12 +395,16 @@ export type Database = {
           name: string
           status?: string
           updated_at?: string
+          visit_minutes?: number | null
         }
         Update: {
           category?: string
           created_at?: string
           description?: string | null
           elevation?: number | null
+          featured?: boolean
+          highlights?: Json | null
+          hours?: string | null
           id?: string
           images?: Json | null
           lat?: number
@@ -401,6 +412,7 @@ export type Database = {
           name?: string
           status?: string
           updated_at?: string
+          visit_minutes?: number | null
         }
         Relationships: []
       }

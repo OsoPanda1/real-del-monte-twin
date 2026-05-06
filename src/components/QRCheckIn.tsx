@@ -1,8 +1,8 @@
-// QR Check-in — inspirado en QRCode-Smart-Attendance-System-with-Geolocation
+// QR Check-in con validaciones reforzadas (GPS ausente, distancia, QR inválido, duplicados)
 import { useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { motion, AnimatePresence } from "framer-motion";
-import { QrCode, MapPin, CheckCircle2, X, Loader2 } from "lucide-react";
+import { QrCode, MapPin, CheckCircle2, X, Loader2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { haversineMeters } from "@/lib/geo/utils";
@@ -17,6 +17,18 @@ interface QRCheckInProps {
   maxDistanceMeters?: number;
 }
 
+const QR_PREFIX = "rdmx://checkin/";
+
+const isValidQrToken = (token: string, expectedType: string, expectedId: string) => {
+  if (!token.startsWith(QR_PREFIX)) return false;
+  const rest = token.slice(QR_PREFIX.length).split("/");
+  if (rest.length < 3) return false;
+  const [type, id] = rest;
+  if (type !== expectedType) return false;
+  if (id !== expectedId) return false;
+  return true;
+};
+
 const QRCheckIn = ({
   targetType, targetId, targetName, targetLat, targetLng,
   maxDistanceMeters = 200,
@@ -24,24 +36,39 @@ const QRCheckIn = ({
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState<boolean | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const qrToken = `rdmx://checkin/${targetType}/${targetId}/${user?.id || "anon"}`;
+  const qrToken = `${QR_PREFIX}${targetType}/${targetId}/${user?.id || "anon"}`;
+
+  const reset = () => {
+    setVerified(null);
+    setDistance(null);
+    setErrorMsg(null);
+  };
 
   const handleCheckIn = async () => {
+    reset();
     if (!user) {
       toast.error("Inicia sesión para hacer check-in");
       return;
     }
-    if (!navigator.geolocation) {
+    if (!isValidQrToken(qrToken, targetType, targetId)) {
+      setErrorMsg("QR inválido o manipulado");
+      toast.error("QR inválido");
+      return;
+    }
+    if (!("geolocation" in navigator) || !navigator.geolocation) {
+      setErrorMsg("Tu navegador no soporta geolocalización");
       toast.error("Geolocalización no soportada");
       return;
     }
+
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const { latitude, longitude } = pos.coords;
+        const { latitude, longitude, accuracy } = pos.coords;
         const d = haversineMeters(latitude, longitude, targetLat, targetLng);
         setDistance(Math.round(d));
         const verifiedOk = d <= maxDistanceMeters;
@@ -57,29 +84,46 @@ const QRCheckIn = ({
           verified: verifiedOk,
         });
         setLoading(false);
+
         if (error) {
-          toast.error(`Error: ${error.message}`);
+          // Detect duplicate (trigger raises unique_violation)
+          const msg = error.message || "";
+          if (msg.toLowerCase().includes("duplicate") || (error as any).code === "23505") {
+            setErrorMsg("Ya hiciste check-in aquí en la última hora");
+            toast.warning("Check-in duplicado: espera 1 hora");
+          } else {
+            setErrorMsg(msg);
+            toast.error(`Error: ${msg}`);
+          }
           return;
         }
         setVerified(verifiedOk);
         if (verifiedOk) {
-          toast.success(`✓ Check-in verificado en ${targetName} (${Math.round(d)}m)`);
+          toast.success(`✓ Check-in verificado en ${targetName} (${Math.round(d)}m, ±${Math.round(accuracy)}m)`);
         } else {
-          toast.warning(`Estás a ${Math.round(d)}m — fuera del rango de ${maxDistanceMeters}m`);
+          setErrorMsg(`Estás a ${Math.round(d)}m. Acércate a menos de ${maxDistanceMeters}m para validar.`);
+          toast.warning(`Fuera de rango: ${Math.round(d)}m`);
         }
       },
       (err) => {
         setLoading(false);
-        toast.error(`GPS error: ${err.message}`);
+        const map: Record<number, string> = {
+          1: "Permiso de ubicación denegado. Habilítalo en el navegador.",
+          2: "GPS no disponible (sin señal o desactivado).",
+          3: "Tiempo agotado al obtener tu ubicación.",
+        };
+        const msg = map[err.code] || err.message || "Error de geolocalización";
+        setErrorMsg(msg);
+        toast.error(msg);
       },
-      { enableHighAccuracy: true, timeout: 10000 },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
     );
   };
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => { setOpen(true); reset(); }}
         className="flex items-center gap-1 px-2 py-1 text-[10px] rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400"
       >
         <QrCode className="w-3 h-3" /> Check-in QR
@@ -110,10 +154,15 @@ const QRCheckIn = ({
                 <br />
                 Verificación por proximidad GPS (≤ {maxDistanceMeters}m)
               </p>
-              {distance !== null && (
-                <div className={`flex items-center gap-2 text-xs mb-3 ${verified ? "text-emerald-400" : "text-amber-400"}`}>
-                  {verified ? <CheckCircle2 className="w-3 h-3" /> : <MapPin className="w-3 h-3" />}
-                  Distancia detectada: {distance}m
+              {distance !== null && verified === true && (
+                <div className="flex items-center gap-2 text-xs mb-3 text-emerald-400">
+                  <CheckCircle2 className="w-3 h-3" /> Verificado a {distance}m
+                </div>
+              )}
+              {errorMsg && (
+                <div className="flex items-start gap-2 text-xs mb-3 text-amber-300 bg-amber-500/10 p-2 rounded">
+                  <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                  <span>{errorMsg}</span>
                 </div>
               )}
               <button
