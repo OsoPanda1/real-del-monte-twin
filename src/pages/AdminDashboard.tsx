@@ -10,6 +10,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import realitoCollage from "@/assets/realito-collage.png";
+import GeoZonesAdmin from "@/components/admin/GeoZonesAdmin";
 
 const ease = [0.2, 0, 0, 1] as const;
 
@@ -30,7 +31,7 @@ interface AztekMetrics {
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState<"overview" | "isabella" | "aztek">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "isabella" | "aztek" | "zones">("overview");
   const [counts, setCounts] = useState<Counts>({
     places: 0, businesses: 0, events: 0, routes: 0, bookpi: 0,
     users: 0, identities: 0, aiLogs: 0, securityEvents: 0, kaosSignals: 0,
@@ -177,6 +178,7 @@ const AdminDashboard = () => {
         <div className="flex items-center gap-3 mb-8 overflow-x-auto">
           {[
             { id: "overview", label: "Ecosistema", icon: Globe },
+            { id: "zones", label: "Geo Zonas", icon: MapPin },
             { id: "isabella", label: "Isabella Core™", icon: Brain },
             { id: "aztek", label: "Aztek Gods System", icon: Pyramid },
           ].map((t) => (
