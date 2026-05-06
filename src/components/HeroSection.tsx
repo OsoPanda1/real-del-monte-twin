@@ -25,7 +25,8 @@ const HeroSection = () => {
           animate={{ scale: [1, 1.04, 1] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/75 to-background" />
+        <div className="absolute inset-0 bg-background/40" />
       </motion.div>
 
       <div className="absolute top-4 right-6 z-20"><UserMenu /></div>
