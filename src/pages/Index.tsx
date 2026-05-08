@@ -17,6 +17,7 @@ const Index = () => {
         <>
           <HeroSection />
           <ExperienceHub />
+          <VisitPlanner />
           <Footer />
           <RealitoChat />
         </>
