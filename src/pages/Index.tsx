@@ -2,6 +2,7 @@ import { useState } from "react";
 import CinematicIntro from "@/components/CinematicIntro";
 import HeroSection from "@/components/HeroSection";
 import ExperienceHub from "@/components/ExperienceHub";
+import VisitPlanner from "@/components/VisitPlanner";
 import Footer from "@/components/Footer";
 import RealitoChat from "@/components/RealitoChat";
 
