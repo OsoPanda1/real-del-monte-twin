@@ -68,6 +68,36 @@ export type Database = {
         }
         Relationships: []
       }
+      badges: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          points: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          points?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          points?: number
+        }
+        Relationships: []
+      }
       bookpi_records: {
         Row: {
           agent_trace: Json | null
@@ -194,6 +224,42 @@ export type Database = {
         }
         Relationships: []
       }
+      cultural_content: {
+        Row: {
+          body: string | null
+          category: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string | null
+          featured: boolean
+          id: string
+          source: string | null
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          id?: string
+          source?: string | null
+          title: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          id?: string
+          source?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       digital_twins: {
         Row: {
           created_at: string
@@ -269,6 +335,71 @@ export type Database = {
           organizer_id?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      forum_posts: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "forum_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_threads: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          id: string
+          pinned: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -361,6 +492,173 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      merchant_subscriptions: {
+        Row: {
+          amount_cents: number
+          business_id: string | null
+          created_at: string
+          currency: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents?: number
+          business_id?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          business_id?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      news: {
+        Row: {
+          author_id: string | null
+          body: string | null
+          category: string
+          cover_url: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          published: boolean
+          published_at: string
+          title: string
+        }
+        Insert: {
+          author_id?: string | null
+          body?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          published_at?: string
+          title: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean
+          published_at?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      offers: {
+        Row: {
+          active: boolean
+          business_id: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          discount_percent: number | null
+          ends_at: string | null
+          id: string
+          owner_id: string | null
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          business_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number | null
+          ends_at?: string | null
+          id?: string
+          owner_id?: string | null
+          starts_at?: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          business_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number | null
+          ends_at?: string | null
+          id?: string
+          owner_id?: string | null
+          starts_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offers_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       places: {
         Row: {
@@ -575,6 +873,56 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_points: {
+        Row: {
+          level: number
+          points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          level?: number
+          points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          level?: number
+          points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -644,6 +992,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      merchant_is_active: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "turista" | "comerciante" | "admin"
