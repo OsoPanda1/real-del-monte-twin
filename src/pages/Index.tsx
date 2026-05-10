@@ -3,6 +3,9 @@ import CinematicIntro from "@/components/CinematicIntro";
 import HeroSection from "@/components/HeroSection";
 import ExperienceHub from "@/components/ExperienceHub";
 import VisitPlanner from "@/components/VisitPlanner";
+import CulturalSection from "@/components/CulturalSection";
+import NewsOffersSection from "@/components/NewsOffersSection";
+import ForumSection from "@/components/ForumSection";
 import Footer from "@/components/Footer";
 import RealitoChat from "@/components/RealitoChat";
 
@@ -18,6 +21,9 @@ const Index = () => {
           <HeroSection />
           <ExperienceHub />
           <VisitPlanner />
+          <CulturalSection />
+          <NewsOffersSection />
+          <ForumSection />
           <Footer />
           <RealitoChat />
         </>
