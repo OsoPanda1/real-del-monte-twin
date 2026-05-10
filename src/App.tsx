@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import ExplorerView from "./pages/ExplorerView.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
+import IntegrationsPage from "./pages/IntegrationsPage.tsx";
+import MerchantOnboardingPage from "./pages/MerchantOnboardingPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -24,14 +26,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/explorer" element={<ExplorerView />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/integraciones" element={<IntegrationsPage />} />
+            <Route path="/comerciante" element={<MerchantOnboardingPage />} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
