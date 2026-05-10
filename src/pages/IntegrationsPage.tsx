@@ -39,10 +39,6 @@ const IntegrationsPage = () => {
 
   const sync = async () => {
     setLoading(true);
-    const { data, error } = await supabase.functions.invoke("research-sync", {
-      body: null,
-    } as any);
-    // Use direct fetch with query params instead
     try {
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/research-sync${orcid ? `?orcid=${encodeURIComponent(orcid)}` : "?q=Real+del+Monte"}`;
       const r = await fetch(url, { headers: { Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` } });
