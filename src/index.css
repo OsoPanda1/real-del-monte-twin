@@ -159,4 +159,18 @@
   .animate-scan {
     animation: scan-line 4s linear infinite;
   }
+
+  @keyframes radar-ping {
+    0% { transform: scale(0.6); opacity: 0.85; }
+    80% { transform: scale(2.6); opacity: 0; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  .radar-marker { position: relative; }
+  .radar-marker::before, .radar-marker::after {
+    content: ""; position: absolute; inset: -6px; border-radius: 9999px;
+    border: 1.5px solid currentColor; opacity: 0.7;
+    animation: radar-ping 2.4s cubic-bezier(0,0,0.2,1) infinite;
+    pointer-events: none;
+  }
+  .radar-marker::after { animation-delay: 1.2s; }
 }
