@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Newspaper, Tag, Calendar } from "lucide-react";
+import { Newspaper, Tag, Calendar, ArrowRight } from "lucide-react";
 
 const NewsOffersSection = () => {
   const [news, setNews] = useState<any[]>([]);
@@ -42,13 +43,15 @@ const NewsOffersSection = () => {
 
         <div className="grid lg:grid-cols-3 gap-5">
           {/* News */}
-          <Column icon={Newspaper} title="Noticias" empty="Sin noticias publicadas">
+          <Column icon={Newspaper} title="Noticias" empty="Sin noticias publicadas" link="/noticias">
             {news.map((n) => (
-              <Item key={n.id} title={n.title} subtitle={n.excerpt} meta={new Date(n.published_at).toLocaleDateString("es-MX")} tag={n.category} />
+              <Link key={n.id} to={`/noticias/${n.id}`} className="block">
+                <Item title={n.title} subtitle={n.excerpt} meta={new Date(n.published_at).toLocaleDateString("es-MX")} tag={n.category} />
+              </Link>
             ))}
           </Column>
           {/* Events */}
-          <Column icon={Calendar} title="Próximos eventos" empty="No hay eventos programados">
+          <Column icon={Calendar} title="Próximos eventos" empty="No hay eventos programados" link="/eventos">
             {events.map((e) => (
               <Item key={e.id} title={e.title} subtitle={e.description} meta={new Date(e.event_date).toLocaleString("es-MX")} tag={e.category} />
             ))}
@@ -67,11 +70,12 @@ const NewsOffersSection = () => {
   );
 };
 
-const Column = ({ icon: Icon, title, empty, children }: any) => (
+const Column = ({ icon: Icon, title, empty, children, link }: any) => (
   <div className="glass-panel-strong border-sovereign p-5">
     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/30">
       <Icon className="w-4 h-4 text-primary" />
-      <span className="heritage-text text-base">{title}</span>
+      <span className="heritage-text text-base flex-1">{title}</span>
+      {link && <Link to={link} className="text-[10px] tabular-data text-primary hover:underline flex items-center gap-1">Ver todo <ArrowRight className="w-3 h-3" /></Link>}
     </div>
     <div className="space-y-3">
       {Array.isArray(children) && children.length > 0 ? children : <p className="text-xs text-muted-foreground text-center py-6">{empty}</p>}

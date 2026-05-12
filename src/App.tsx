@@ -10,6 +10,13 @@ import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import IntegrationsPage from "./pages/IntegrationsPage.tsx";
 import MerchantOnboardingPage from "./pages/MerchantOnboardingPage.tsx";
+import NewsListPage from "./pages/NewsListPage.tsx";
+import NewsDetailPage from "./pages/NewsDetailPage.tsx";
+import EventsPage from "./pages/EventsPage.tsx";
+import RoutesPage from "./pages/RoutesPage.tsx";
+import ForumPage from "./pages/ForumPage.tsx";
+import ForumThreadPage from "./pages/ForumThreadPage.tsx";
+import CulturalPage from "./pages/CulturalPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -28,6 +35,14 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/integraciones" element={<IntegrationsPage />} />
             <Route path="/comerciante" element={<MerchantOnboardingPage />} />
+            <Route path="/noticias" element={<NewsListPage />} />
+            <Route path="/noticias/:id" element={<NewsDetailPage />} />
+            <Route path="/eventos" element={<EventsPage />} />
+            <Route path="/rutas" element={<RoutesPage />} />
+            <Route path="/foros" element={<ForumPage />} />
+            <Route path="/foros/:id" element={<ForumThreadPage />} />
+            <Route path="/cultural" element={<CulturalPage />} />
+            <Route path="/cultural/:id" element={<CulturalPage />} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
