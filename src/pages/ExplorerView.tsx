@@ -180,8 +180,14 @@ const ExplorerView = () => {
 
     const addMarker = (lng: number, lat: number, color: string, ring: string, onClick: () => void, glyph?: string) => {
       const el = document.createElement("div");
-      el.style.cssText = `width:16px;height:16px;border-radius:50%;background:${color};box-shadow:0 0 0 2px ${ring},0 0 14px ${color};cursor:pointer;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:9px;color:#000;font-weight:700;`;
-      if (glyph) el.textContent = glyph;
+      el.className = "radar-marker";
+      el.style.cssText = `width:16px;height:16px;border-radius:50%;background:${color};box-shadow:0 0 0 2px ${ring},0 0 14px ${color};cursor:pointer;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:9px;color:${color};font-weight:700;`;
+      if (glyph) {
+        const inner = document.createElement("span");
+        inner.textContent = glyph;
+        inner.style.cssText = "color:#000;";
+        el.appendChild(inner);
+      }
       el.onclick = onClick;
       const m = new maplibregl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map);
       markersRef.current.push(m);
