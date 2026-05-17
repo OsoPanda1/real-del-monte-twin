@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import Index from "./pages/Index.tsx";
 import ExplorerView from "./pages/ExplorerView.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
@@ -24,6 +25,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
     <AuthProvider>
       <TooltipProvider>
         <Toaster />
@@ -49,6 +51,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
+    </ErrorBoundary>
   </QueryClientProvider>
 );
 
